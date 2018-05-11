@@ -14,8 +14,8 @@
        http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!-- 加载数据库配置 -->
-    <!--<context:property-placeholder location="classpath:database.properties" system-properties-mode="OVERRIDE" ignore-unresolvable="true" />
-    <import resource="classpath:database/database.xml" />-->
+    <context:property-placeholder location="classpath:database.properties" system-properties-mode="OVERRIDE" ignore-unresolvable="true" />
+    <import resource="classpath:database/database.xml" />
 
     <!-- 加载bean相关配置 -->
     <context:property-placeholder location="classpath:component.properties" system-properties-mode="OVERRIDE" ignore-unresolvable="true" />
