@@ -1,12 +1,10 @@
 package org.jayne.crawler.fetcher;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpClientParams;
 import org.jayne.crawler.data.FetchResult;
 import org.jayne.crawler.data.UrlType;
 import org.jayne.crawler.utils.ExecResult;
+import org.jayne.crawler.utils.HttpClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +19,6 @@ import java.util.Map;
  */
 @Service
 public class FetcherImpl implements Fetcher {
-    private static final HttpClient CLIENT;
-    static {
-        MultiThreadedHttpConnectionManager mgr = new MultiThreadedHttpConnectionManager();
-        mgr.getParams().setDefaultMaxConnectionsPerHost(10);
-        mgr.getParams().setMaxTotalConnections(10);
-        mgr.getParams().setConnectionTimeout(5000);
-        mgr.getParams().setSoTimeout(10000);
-        HttpClientParams params = new HttpClientParams();
-        params.setContentCharset("utf-8");
-        CLIENT = new HttpClient(params, mgr);
-    }
 
     private static final Map<UrlType, ProfileFetcher> PROFILE_FETCHER_MAP = new HashMap<UrlType, ProfileFetcher>();
 
@@ -90,7 +77,7 @@ public class FetcherImpl implements Fetcher {
         GetMethod httpMethod = new GetMethod(url);
         StringBuffer stringBuffer = new StringBuffer("");
         try {
-            int statusCode = CLIENT.executeMethod(httpMethod);
+            int statusCode = HttpClientUtils.getClient().executeMethod(httpMethod);
             if (200 != statusCode) {
                 throw new IOException("HttpUtils: status code error! [" + statusCode + "] " + httpMethod.getURI().toString());
             }

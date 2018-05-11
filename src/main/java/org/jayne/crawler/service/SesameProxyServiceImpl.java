@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.jayne.crawler.data.proxy.ProxyContent;
 import org.jayne.crawler.data.proxy.ProxyResponse;
+import org.jayne.crawler.utils.HttpClientUtils;
 import org.jayne.crawler.utils.JsonUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,6 @@ public class SesameProxyServiceImpl implements SesameProxyService {
 
     private static String HTTP_URL = "http://webapi.http.zhimacangku.com/getip?type=2&pro=0&city=0&yys=0&port=1&pack=19284&ts=1&ys=1&cs=1&lb=1&sb=0&pb=45&mr=2&regions=&num=";
     private static String HTTPS_URL = "http://webapi.http.zhimacangku.com/getip?type=2&pro=0&city=0&yys=0&port=11&pack=19284&ts=1&ys=1&cs=1&lb=1&sb=0&pb=45&mr=2&regions=&num=";
-
-    private static final HttpClient CLIENT;
-    static {
-        MultiThreadedHttpConnectionManager mgr = new MultiThreadedHttpConnectionManager();
-        mgr.getParams().setDefaultMaxConnectionsPerHost(10);
-        mgr.getParams().setMaxTotalConnections(10);
-        mgr.getParams().setConnectionTimeout(5000);
-        mgr.getParams().setSoTimeout(10000);
-        HttpClientParams params = new HttpClientParams();
-        params.setContentCharset("utf-8");
-        CLIENT = new HttpClient(params, mgr);
-    }
 
     @Override
     public List<ProxyContent> getHttpProxy(int size) {
@@ -64,7 +53,7 @@ public class SesameProxyServiceImpl implements SesameProxyService {
         GetMethod httpMethod = new GetMethod(url);
         StringBuffer stringBuffer = new StringBuffer("");
         try {
-            int statusCode = CLIENT.executeMethod(httpMethod);
+            int statusCode = HttpClientUtils.getClient().executeMethod(httpMethod);
             if (200 != statusCode) {
                 throw new IOException("SesameProxyServiceImpl: HttpUtils status code error! [" + statusCode + "] " + httpMethod.getURI().toString());
             }
