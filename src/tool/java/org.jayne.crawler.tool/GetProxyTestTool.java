@@ -1,11 +1,14 @@
 package org.jayne.crawler.tool;
 
+import org.jayne.crawler.data.proxy.ProxyContent;
 import org.jayne.crawler.service.SesameProxyService;
 import org.jayne.crawler.tool.common.AbstractLocalTool;
 import org.jayne.crawler.tool.common.Tool;
+import org.jayne.crawler.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by jayne on 2018/4/25.
@@ -28,7 +31,14 @@ public class GetProxyTestTool extends AbstractLocalTool {
 
     @Override
     public void exec(String[] args) throws Exception {
-        sesameProxyService.getHttpProxy(1);
+        List<ProxyContent> proxyContentList = sesameProxyService.getHttpProxy(1);
+        if(proxyContentList != null && proxyContentList.size() > 0){
+            for(ProxyContent proxyContent : proxyContentList){
+                LogUtils.info("IP: " + proxyContent.getIp());
+            }
+        }else {
+            LogUtils.info("未获取到有效IP");
+        }
     }
 
     public static void main(String[] args){
